@@ -22,7 +22,7 @@ numero di likes. */
 const posts = [{
         id: 1,
         autore: 'Alessandro Saba',
-        foto: 'https://images.unsplash.com/photo-1649275598417-71b09aa8c4cc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDN8dG93SlpGc2twR2d8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60',
+        foto: '',
         data: new Date(2018, 7, 22).toLocaleDateString(),
         testo: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit magni accusantium expedita repellendus reprehenderit temporibus aliquid deleniti! Maiores unde exercitationem numquam velit? Ipsam, nam. Voluptates nam, voluptatem reiciendis libero doloremque ducimus velit nemo provident ipsam praesentium. Vitae, quasi, illo quaerat sit optio, provident tempora cupiditate totam asperiores corrupti in quia aut sapiente? At omnis nemo debitis iusto quod accusantium! Doloremque voluptatem quis alias, ipsa amet vitae nulla atque reiciendis dolor, ut distinctio porro quas cum ducimus praesentium perspiciatis aliquam, saepe voluptate. Ad fugiat distinctio odio reiciendis aut molestias dolor, error veniam, ex, quam tempora quibusdam obcaecati? Voluptatibus atque vitae aliquid?',
         immagine: 'https://images.unsplash.com/photo-1649414292216-2adda02e2557?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDEzfDZzTVZqVExTa2VRfHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60',
@@ -49,7 +49,7 @@ const posts = [{
     {
         id: 4,
         autore: 'Sara Bettola',
-        foto: 'https://images.unsplash.com/photo-1648921895125-e0ad16e864a9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDh8dG93SlpGc2twR2d8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60',
+        foto: '',
         data: new Date(2020, 6, 5).toLocaleDateString(),
         testo: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit magni accusantium expedita repellendus reprehenderit temporibus aliquid deleniti! Maiores unde exercitationem numquam velit? Ipsam, nam. Voluptates nam, voluptatem reiciendis libero doloremque ducimus velit nemo provident ipsam praesentium. Vitae, quasi, illo quaerat sit optio, provident tempora cupiditate totam asperiores corrupti in quia aut sapiente? At omnis nemo debitis iusto quod accusantium! Doloremque voluptatem quis alias, ipsa amet vitae nulla atque reiciendis dolor, ut distinctio porro quas cum ducimus praesentium perspiciatis aliquam, saepe voluptate. Ad fugiat distinctio odio reiciendis aut molestias dolor, error veniam, ex, quam tempora quibusdam obcaecati? Voluptatibus atque vitae aliquid?',
         immagine: 'https://images.unsplash.com/photo-1649021382209-a2d00b9d9f37?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDN8NnNNVmpUTFNrZVF8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60',
@@ -67,22 +67,75 @@ const posts = [{
 ]
 
 const like_id = []
-    /* Milestone 2
-    Prendendo come riferimento il layout di esempio presente nell'html, stampiamo i post del nostro feed. */
+
+/* Milestone 2
+Prendendo come riferimento il layout di esempio presente nell'html, stampiamo i post del nostro feed. */
+
 const element_container = document.querySelector('.container')
 posts.forEach(element => {
-    const card_mark_up = create_mark_up(element)
+    let card_mark_up
+    if (element.foto === '') {
+        const fallback = element.autore.split(' ')
+        console.log(element.foto === '');
+        let iniziali = ''
+        fallback.forEach(element => {
+            iniziali += element.charAt(0)
+        })
+        element.foto = iniziali
+        card_mark_up = create_mark_up_nofoto(element)
+    } else {
+        card_mark_up = create_mark_up_foto(element)
+    }
+    console.log(element.autore.split(' '));
     element_container.insertAdjacentHTML('beforeend', card_mark_up)
 })
 
 
 
+
+/* Milestone 3
+Se clicchiamo sul tasto "Mi Piace" cambiamo il colore al testo del bottone e incrementiamo il counter dei likes relativo. Salviamo in un secondo array gli id dei post ai quali abbiamo messo il like. */
+
+
+const element_like = document.querySelectorAll('.like_button')
+console.log(element_like);
+element_like.forEach((element, index) => {
+    let button_click
+    element.addEventListener('click', function() {
+
+        if (button_click === true) {
+            this.style.color = 'black'
+            posts[index].likes -= 1
+            button_click = false
+
+        } else {
+            this.style.color = 'blue'
+            posts[index].likes += 1
+            button_click = true
+
+        }
+        const element_card = document.getElementById(`${posts[index].id}`)
+        const element_span = element_card.querySelector('span')
+        element_span.innerHTML = posts[index].likes
+        if (!like_id.includes(posts[index].id)) {
+            like_id.push(posts[index].id)
+        }
+    })
+
+})
+
+
+function fallback(object) {
+
+}
+
+function autore() { return this.nome + " " + this.cognome; }
 /**
  * ###Crea una card con il valore delle chiavi di un oggetto
  * @param {string} element l'elemente dell'array di oggetti con cui si vuole creare una card
  * @returns il markup per creare una card
  */
-function create_mark_up(element) {
+function create_mark_up_foto(element) {
     const mark_up = `
     <div id="${element.id}" class="card">
         <div class="card_header">
@@ -118,33 +171,43 @@ function create_mark_up(element) {
     return mark_up
 }
 
-/* Milestone 3
-Se clicchiamo sul tasto "Mi Piace" cambiamo il colore al testo del bottone e incrementiamo il counter dei likes relativo. Salviamo in un secondo array gli id dei post ai quali abbiamo messo il like. */
-
-
-const element_like = document.querySelectorAll('.like_button')
-console.log(element_like);
-element_like.forEach((element, index) => {
-    let button_click
-    element.addEventListener('click', function() {
-
-        if (button_click === true) {
-            this.style.color = 'black'
-            posts[index].likes -= 1
-            button_click = false
-
-        } else {
-            this.style.color = 'blue'
-            posts[index].likes += 1
-            button_click = true
-
-        }
-        const element_card = document.getElementById(`${posts[index].id}`)
-        const element_span = element_card.querySelector('span')
-        element_span.innerHTML = posts[index].likes
-        if (!like_id.includes(posts[index].id)) {
-            like_id.push(posts[index].id)
-        }
-    })
-
-})
+/**
+ * ###Crea una card con il valore delle chiavi di un oggetto
+ * @param {string} element l'elemente dell'array di oggetti con cui si vuole creare una card
+ * @returns il markup per creare una card
+ */
+function create_mark_up_nofoto(element) {
+    const mark_up = `
+    <div id="${element.id}" class="card">
+        <div class="card_header">
+            <div class="img_header">
+                ${element.foto}
+            </div>
+            <!-- /.foto_header -->
+            <div class="text_header">
+                <h3>${element.autore}</h3>
+                <p>${element.data}</p>
+            </div>
+            <!-- /.text_header -->
+        </div>
+        <!-- /.card_header -->
+        <div class="card_body">
+            <div class="text_body">${element.testo}</div>
+            <!-- /.text_body -->
+            <div class="img_body">
+                <img src="${element.immagine}" alt="">
+            </div>
+            <!-- /.img_body -->
+        </div>
+        <!-- /.card_body -->
+        <div class="card_footer">
+            <div class="like_button"><i class="fa-solid fa-thumbs-up"></i> Mi piace</div>
+            <!-- /.like_button -->
+            <div class="counter_like">Piace a <span>${element.likes}</span> persone</div>
+            <!-- /.counter_like -->
+        </div>
+        <!-- /.card_footer -->
+    </div>
+    `
+    return mark_up
+}
