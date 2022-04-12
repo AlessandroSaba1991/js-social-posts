@@ -66,8 +66,9 @@ const posts = [{
     }
 ]
 
-/* Milestone 2
-Prendendo come riferimento il layout di esempio presente nell'html, stampiamo i post del nostro feed. */
+const like_id = []
+    /* Milestone 2
+    Prendendo come riferimento il layout di esempio presente nell'html, stampiamo i post del nostro feed. */
 const element_container = document.querySelector('.container')
 posts.forEach(element => {
     const card_mark_up = create_mark_up(element)
@@ -120,15 +121,24 @@ function create_mark_up(element) {
 /* Milestone 3
 Se clicchiamo sul tasto "Mi Piace" cambiamo il colore al testo del bottone e incrementiamo il counter dei likes relativo. Salviamo in un secondo array gli id dei post ai quali abbiamo messo il like. */
 
+
 const element_like = document.querySelectorAll('.like_button')
 console.log(element_like);
 element_like.forEach((element, index) => {
+    let button_click
     element.addEventListener('click', function() {
-        if (button_click = true) {
+
+        if (button_click === true) {
+            this.style.color = 'black'
+            posts[index].likes -= 1
+            button_click = false
+
+        } else {
+            this.style.color = 'blue'
+            posts[index].likes += 1
+            button_click = true
 
         }
-        this.style.color = 'blue'
-        posts[index].likes += 1
         const element_card = document.getElementById(`${posts[index].id}`)
         const element_span = element_card.querySelector('span')
         element_span.innerHTML = posts[index].likes
