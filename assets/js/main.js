@@ -89,7 +89,7 @@ posts.forEach(element => {
  */
 function create_mark_up(element) {
     const mark_up = `
-    <div class="card">
+    <div id="${element.id}" class="card">
         <div class="card_header">
             <div class="img_header">
                 <img src="${element.foto}" alt="">
@@ -122,3 +122,19 @@ function create_mark_up(element) {
     `
     return mark_up
 }
+
+/* Milestone 3
+Se clicchiamo sul tasto "Mi Piace" cambiamo il colore al testo del bottone e incrementiamo il counter dei likes relativo. Salviamo in un secondo array gli id dei post ai quali abbiamo messo il like. */
+
+const element_like = document.querySelectorAll('.like_button')
+console.log(element_like);
+element_like.forEach((element, index) => {
+    element.addEventListener('click', function() {
+        this.style.color = 'blue'
+        posts[index].likes += 1
+        const element_card = document.getElementById(`${posts[index].id}`)
+        const element_span = element_card.querySelector('span')
+        element_span.innerHTML = posts[index].likes
+    })
+
+})
