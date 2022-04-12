@@ -53,6 +53,8 @@ const posts = [{
     }
 ]
 
+const like_id = []
+
 /* Milestone 2
 Prendendo come riferimento il layout di esempio presente nell'html, stampiamo i post del nostro feed. */
 const element_container = document.querySelector('.container')
@@ -116,6 +118,10 @@ element_like.forEach((element, index) => {
         const element_card = document.getElementById(`${posts[index].id}`)
         const element_span = element_card.querySelector('span')
         element_span.innerHTML = posts[index].likes
+        if (!like_id.includes(posts[index].id)) {
+            like_id.push(posts[index].id)
+        }
+
     })
 
 })
