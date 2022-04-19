@@ -67,7 +67,7 @@ const posts = [{
 ];
 
 //creo un array dove andro ad inserire gli id dei post che hanno preso un like
-const like_id = [];
+let like_id = [];
 
 /* Milestone 2
 Prendendo come riferimento il layout di esempio presente nell'html, stampiamo i post del nostro feed. */
@@ -106,13 +106,11 @@ const element_like = document.querySelectorAll(".like_button");
 
 //ciclo l'array ottenuta
 element_like.forEach((element, index) => {
-    //mi creo una variabile per il controllo del click
-    let button_click;
 
     //attacco l'event listener all'elemento
     element.addEventListener("click", function() {
-        //controllo se la mia variabile non è true (se non lo è ancora non abbiamo cliccato)
-        if (!button_click) {
+        //controllo se l'id del post è presente nella lista
+        if (!like_id.includes(posts[index].id)) {
             //imposto un colore al testo dell'elemento
             this.style.color = "blue";
 
@@ -122,8 +120,8 @@ element_like.forEach((element, index) => {
             //aggiungo il valore 1 ai like relativi
             posts[index].likes++;
 
-            //faccio diventare la variabile true (cioè ho cliccato)
-            button_click = true;
+            //lo pusho nell'array
+            like_id.push(posts[index].id)
 
             //se è già stato cliccato
         } else {
@@ -136,8 +134,8 @@ element_like.forEach((element, index) => {
             //decremento il valore dei like
             posts[index].likes--;
 
-            //imposto la variabile su false
-            button_click = false;
+            //aggiorno la lista dei like filtrando quello già schiacciato
+            like_id = like_id.filter(element => element !== posts[index].id)
         }
         //mi seleziono la relativa card (con querySelector mi dava errore se selezionavo l'id quindo ho dovuto spezzettare)
         const element_card = document.getElementById(`${posts[index].id}`);
@@ -148,11 +146,6 @@ element_like.forEach((element, index) => {
         //aggiorno i like
         element_span.innerHTML = posts[index].likes;
 
-        //controllo se nella lista degli id è presente questo post
-        if (!like_id.includes(posts[index].id)) {
-            //se non lo è lo pusho
-            like_id.push(posts[index].id);
-        }
     });
 });
 
